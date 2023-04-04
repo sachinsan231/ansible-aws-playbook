@@ -100,7 +100,7 @@
       register: pubRT_out                  
     - name: new NatGateway in public subnet 
       ec2_vpc_nat_gateway:
-        vpc_id: "{{vpcout.vpc.id}}"
+        wait: yes
         state: present
         subnet_id: "{{pubsub1_out.subnet.id}}"        
         region: eu-central-1

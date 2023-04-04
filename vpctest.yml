@@ -83,3 +83,18 @@
         resource_tags:
             Name: Vprofile-IGW
       register: igw_out            
+    - name: Vprofile-Route 
+      ec2_vpc_route_table:
+        vpc_id: "{{vpcout.vpc.id}}"
+        region: eu-central-1
+        tags:
+            Name: Vprofile-PubRT        
+        state: present
+        subnets:
+            - "{{pubsub1_out.subnet.id}}"
+            - "{{pubsub2_out.subnet.id}}"  
+            - "{{pubsub3_out.subnet.id}}"
+        routes:
+            - dest: 0.0.0.0/0
+              gateway_id: "{{igw_out.gatewat_id}}"
+      register: pubRT_out                  

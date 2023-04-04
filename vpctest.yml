@@ -74,4 +74,12 @@
         cidr: 172.20.6.0/24
         resource_tags:
             Name: Vprofile-privsub3
-      register: privsub3_out            
+      register: privsub3_out 
+    - name: Internet Gateway Group 
+      ec2_vpc_igw:
+        vpc_id: "{{vpcout.vpc.id}}"
+        region: eu-central-1
+        state: present
+        resource_tags:
+            Name: Vprofile-IGW
+      register: igw_out            

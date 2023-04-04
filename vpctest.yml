@@ -106,3 +106,17 @@
         region: eu-central-1
         if_exist_do_not_create: true
       register: NATGW_out                  
+    - name: Vprofile private Route table
+      ec2_vpc_route_table:
+        vpc_id: "{{vpcout.vpc.id}}"
+        region: eu-central-1
+        tags:
+            Name: Vprofile-PrivRT        
+        subnets:
+            - "{{privsub1_out.subnet.id}}"
+            - "{{privsub2_out.subnet.id}}"  
+            - "{{privsub3_out.subnet.id}}"
+        routes:
+            - dest: 0.0.0.0/0
+              gateway_id: "{{NATGW_out.gateway_id}}"
+      register: privRT_out                        

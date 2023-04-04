@@ -27,7 +27,7 @@
               from_port: 22
               to_port: 22
               cidr_ip: 94.134.128.162/32
-        register: BAstionSG_out
+      register: BAstionSG_out
     - name: create Bastion host
       ec2:
         key_name: vprofile-key

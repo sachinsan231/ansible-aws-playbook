@@ -46,5 +46,6 @@
             Project: Vprofile
             owner: Devops        
         group_id: "{{BAstionSG_out.group_id}}"
+        vpc_subnet_id: "{{pubsub1id}}"
       register: BH_out  
  

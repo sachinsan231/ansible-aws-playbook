@@ -98,3 +98,11 @@
             - dest: 0.0.0.0/0
               gateway_id: "{{igw_out.gateway_id}}"
       register: pubRT_out                  
+    - name: new NatGateway in public subnet 
+      ec2_vpc_nat_gateway:
+        vpc_id: "{{vpcout.vpc.id}}"
+        state: present
+        subnet_id: "{{pubsub1_out.subnet.id}}"        
+        region: eu-central-1
+        if_exist_do_not_create: true
+      register: NATGW_out                  

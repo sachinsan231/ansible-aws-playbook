@@ -1,3 +1,3 @@
-bastion_ami: ami-00ad2436e75246bba
-region: "eu-central-1
-MYIP: 94.134.128.162/32
+bastion_ami: "ami-00ad2436e75246bba"
+region: "eu-central-1"
+MYIP: "94.134.128.162/32"

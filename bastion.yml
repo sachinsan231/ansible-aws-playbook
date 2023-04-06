@@ -1,51 +1,59 @@
 ---
-- hosts: localhost
+- name: Setup Vprofile Bastion Host
+  hosts: localhost
   connection: local
   gather_facts: no
   tasks:
-    - name: Import VPC setup variable
-      include_vars: output_vars  
-    - name: create ec2 key
+    - name: Import VPC setup Variable
+      include_vars: vars/bastion_setup
+
+    - name: Import VPC setup Variable
+      include_vars: vars/output_vars
+
+    - name: Create vprofile ec2 key
       ec2_key:
         name: vprofile-key
-        region: eu-central-1
+        region: "{{region}}"
       register: key_out
-    - name: save private key info
+
+
+    - name: Save private key into file bastion-key.pem
       copy:
         content: "{{key_out.key.private_key}}"
         dest: "./bastion-key.pem"
-        mode: 0600        
+        mode: 0600
       when: key_out.changed
-    - name: create SG grp for bastion host
+
+    - name: Create Sec Grp for bastion host
       ec2_group:
         name: Bastion-host-sg
-        description: allow port 22 from everywhere
-        region: eu-central-1
+        description: Allow port 22 from everywhere and all port within sg
+        region: "{{region}}"
         vpc_id: "{{vpcid}}"
         rules:
-            - proto: tcp
-              from_port: 22
-              to_port: 22
-              cidr_ip: 94.134.128.162/32
-      register: BAstionSG_out
-    - name: create Bastion host
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            cidr_ip: "{{MYIP}}"
+      register: BastionSG_out
+
+    - name: Creating Bastion Host
       ec2:
         key_name: vprofile-key
-        region: eu-central-1
+        region: "{{region}}"
         instance_type: t2.micro
-        image: ami-00ad2436e75246bba
+        image: "{{ bastion_ami }}"
         wait: yes
         wait_timeout: 300
         instance_tags:
-            Name: "Bastion_host"
-            Project: Vprofile
-            owner: Devops
+          Name: "Bastion_host"
+          Project: Vprofile
+          Owner: DevOps Team
         exact_count: 1
         count_tag:
-            Name: "Bastion_host"
-            Project: Vprofile
-            owner: Devops        
-        group_id: "{{BAstionSG_out.group_id}}"
+          Name: "Bastion_host"
+          Project: Vprofile
+          Owner: DevOps Team
+        group_id: "{{BastionSG_out.group_id}}"
         vpc_subnet_id: "{{pubsub1id}}"
-      register: BH_out  
- 
+      register: bastionHost_out
